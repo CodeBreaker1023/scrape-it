@@ -8,6 +8,8 @@ var cheerio = require("cheerio");
 // Initialize Express
 var app = express();
 
+app.use(express.static('public'));
+
 // Database configuration
 var databaseUrl = "scraper";
 var collections = ["scrapedData"];
@@ -20,7 +22,8 @@ db.on("error", function(error) {
 
 // Main route (simple Hello World Message)
 app.get("/", function(req, res) {
-  res.send("Hello world");
+  // res.send("Hello world");
+  // res.sendFile(__dirname + '/public/index.html');
 });
 
 // Route 1
@@ -56,7 +59,9 @@ app.get("/scrape", function(req, res) {
  axios.get("http://www.espn.com/").then(function(response){
     var $ = cheerio.load(response.data); //parse with cheerio
 
-    $(".headlineStack__list").each(function(i, element) {
+    // $(".headlineStack__list").each(function(i, element) {
+      $(".contentItem").each(function(i, element) {
+        console.log(i);
 
       var title = $(element).children().text();
       var link = $(element).find("a").attr("href");

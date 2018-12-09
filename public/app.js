@@ -7,18 +7,38 @@ function getResults() {
   // Empty any results currently on the page
   $("#results").empty();
   // Grab all of the current notes
-  $.getJSON("/all", function(data) {
-    // For each note...
+  $.ajax({
+    type: "GET",
+    dataType: "json",
+    url: "/all"
+    
+    
+  }).then((data)=>{
     for (var i = 0; i < data.length; i++) {
-      // ...populate #results with a p-tag that includes the note's title and object id
-      $("#results").prepend("<p class='data-entry' data-id=" + data[i]._id + "><span class='dataTitle' data-id=" +
-        data[i]._id + ">" + data[i].title + "</span><span class=delete>X</span></p>");
-    }
-  });
-}
 
-// Runs the getResults function as soon as the script is executed
+  console.log(data[i].articleTitle);
+
+      // ...populate #results with a p-tag that includes the note's articleTitle and object id
+      $("#articles").prepend("<p class='data-entry' data-id=" + data[i]._id + "><span class='dataTitle' data-id=" +
+        data[i]._id + ">" + data[i].articleTitle + "</span><span class=delete>X</span></p>");
+    }
+  })
+
+
+  // $.getJSON("/all", function(data) {
+  //   // For each note...
+  //   for (var i = 0; i < data.length; i++) {
+  //     // ...populate #results with a p-tag that includes the note's title and object id
+  //     $("#results").prepend("<p class='data-entry' data-id=" + data[i]._id + "><span class='dataTitle' data-id=" +
+  //       data[i]._id + ">" + data[i].title + "</span><span class=delete>X</span></p>");
+  //   }
+  // });
+}
+setTimeout(() => {
 getResults();
+  
+}, 2000);
+// Runs the getResults function as soon as the script is executed
 
 // When the #make-new button is clicked
 $(document).on("click", "#make-new", function() {
