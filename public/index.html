@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8">
     <title>Scrape-It</title>
+    <!-- JQuery Library-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <style media="screen">
       body {
         text-align: center;
@@ -28,36 +31,68 @@
         background-color: antiquewhite;
       }
       textarea {
-        width: 400px;
-        height: 400px;
+        width: 465px;
+        height: 175px;
         margin-left: auto;
         margin-right: auto;
         font-size: 24px;
         background-color: antiquewhite;
-
+        display: inline-block;
       }
       .data-title {
         cursor: pointer;
         font-size: 24px;
+        font-weight: bold;
       }
       #results {
-        width: 400px;
+        width: 800px;
         height: 200px;
         overflow: auto;
         margin-left: auto;
         margin-right: auto;
         background-color: antiquewhite;
       }
+      #make-new {
+        margin: 10px;
+      }
       #action-button {
         display: inline-block;
       }
-
+      .articles {
+        font-size: 30px;
+        color: black;
+        background-color: rgb(255, 196, 0);
+        word-wrap: break-word;
+        margin: 20px;
+        display: inline-block;
+        vertical-align: middle;
+        font-weight: bold;
+      }
+      hr {
+        margin: 20px;
+      }
+      .art-img {
+        /* display: inline-block; */
+        vertical-align: middle;
+        float: left;
+        margin-left: 30px;
+      }
+      .comment-header {
+        margin: 2px;
+        font-size: 20px;
+      }
+      .data-entry {
+        margin: 0px 5px 0px 5px;
+      }
       .comment {
         background-color: white;
         color: black;
       }
       #buttons {
         margin: 20px;
+      }
+      #note {
+
       }
     </style>
   </head>
@@ -67,8 +102,10 @@
     </nav>
 
     <div class="container">
+      <h1>TODAY'S LATEST POSTS</h1>
+      <div id="results"></div>
+
       <h1>TODAY'S TOP HEADLINES</h1>
-    
       <div class="articles">
         <span id="articles"></span>
       </div>
@@ -78,22 +115,108 @@
       </div>
     </div>
 
-    <h1>Comments here</h1>
-    <div id="user-input">
-        <p>Title</p>
-        <input type="text" id="title" />
-      <br>
-        <p>Note</p>
-        <textarea id="note"></textarea>
-      <div id="buttons">
-        <div id="action-button">
-          <button id="make-new">Submit</button>
-        </div>
-        <button id="clear-all">Delete All Notes</button>
-      </div>
-    </div>
+    <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyDNq9UbKxfZ_3UPP36j0bSvacyFJzk9hmU",
+        authDomain: "web-scraper-88689.firebaseapp.com",
+        databaseURL: "https://web-scraper-88689.firebaseio.com",
+        projectId: "web-scraper-88689",
+        storageBucket: "",
+        messagingSenderId: "1080768199218"
+      };
+      firebase.initializeApp(config);
 
-    <div id="results"></div>
+      // Create a variable to reference the database.
+      var database = firebase.database();
+
+      // Initial Values
+      var title = "";
+      var note = "";
+
+      // Capture Button Click
+      $("#make-new").on("click", function(event) {
+        event.preventDefault();
+
+        // Grabbed values from text boxes
+        title = $("#title").val().trim();
+        note = $("#note").val().trim();
+
+        var newComment = {
+          title: title,
+          note:note, 
+          dateAdded: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        // Code for handling the push
+        database.ref().push(newComment);
+        console.log(newComment);
+        console.log(newComment.title);
+        console.log(newComment.note);
+
+        // Clears all of the text-boxes
+        $("#note").val("");
+
+        $("#results").html(title);
+        $("#results").text(note);
+        $("results").text(dateAdded);
+      });
+      // Create Firebase event for adding employee to the database and a row in the html when a user adds an entry
+      database.ref().on("child_added", function(childSnapshot) {
+        console.log(childSnapshot.val());
+
+        // Store everything into a variable.
+        var title = childSnapshot.val().title;
+        var note = childSnapshot.val().note;
+
+        // Employee Info
+        console.log(title);
+        console.log(note);
+
+        // Create the new row
+        var newRow = $("<tr>").append(
+          $("<td>").text(title),
+          $("<td>").text(note),
+          $("<td>").text(dateAdded)
+        );
+
+        // Append the new row to the table
+        $("#results > tbody").append(newRow);
+      });
+      // // Firebase watcher + initial loader HINT: .on("value")
+      // database.ref().on("value", function(snapshot) {
+      //    // Log everything that's coming out of snapshot
+      //   console.log(snapshot.val());
+      //   // console.log(snapshot.val().title);
+      //   console.log(snapshot.val().note);
+
+      //   // Change the HTML to reflect
+      //   $("#results").text(snapshot.val().title);
+      //   $("#results").text(snapshot.val().note);
+
+      //   // Handle the errors
+      //   }, function(errorObject) {
+      //     console.log("Errors handled: " + errorObject.code);
+      // });
+      // // Firebase watcher .on("child_added"
+      // database.ref().on("child_added", function(snapshot) {
+      //   // storing the snapshot.val() in a variable for convenience
+      //   var sv = snapshot.val();
+
+      //   // Console.log the last user's note
+      //   console.log(sv.title);
+      //   console.log(sv.note);
+
+        // Append user comment to the Latest Post
+        // $("#results").text(title);
+        // $("#results").text(note);
+
+        // Handle the errors
+      // }, function(errorObject) {
+      //   console.log("Errors handled: " + errorObject.code);
+      // });
+    </script>
     <script src="app.js"></script>
   </body>
 </html>

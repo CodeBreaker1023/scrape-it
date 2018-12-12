@@ -15,13 +15,13 @@ function getResults() {
     
   }).then((data)=>{
     for (var i = 0; i < data.length; i++) {
-      console.log("data" + data);
+      // console.log("data" + data);
 
   //console.log(data[i].title);
 
       // ...populate #articles with a p-tag that includes the note's articleTitle and object id
-      $("#articles").prepend("<p class='data-entry' data-id=" + data[i]._id + "><span class='dataTitle' data-id=" +
-        data[i]._id + ">" + data[i].title + "</span><span class=delete>X</span><button class='comment'>Comment</button></p><img height='200' width='300' src="+data[i].image+" class='img img-responsive'><br/>");
+      $("#articles").prepend("<div class='wrapper'><p class='data-entry' data-id=" + data[i]._id + "><span class='dataTitle articles' id=title data-id=" +
+        data[i]._id + ">" + data[i].title + "</span></p><img height='200' width='300' src="+data[i].image+" class='art-img img img-responsive'><p class='comment-header'>Leave a Comment</p><textarea id='note'></textarea><button class='comment' id='make-new'>Comment</button></div><hr>");
       
       // ...populate coins and their prices
       // $("#coin-prices").prepend("<p class='coin-prices' data-id=" + data[i]._id + "><span class='coins'>" + data[i]._coin +"</span><span class='prices'>" + data[i]._price +"</span><br/>")
@@ -46,29 +46,29 @@ getResults();
 // Runs the getResults function as soon as the script is executed
 
 // When the #make-new button is clicked
-$(document).on("click", "#make-new", function() {
-  // AJAX POST call to the submit route on the server
-  // This will take the data from the form and send it to the server
-  $.ajax({
-    type: "POST",
-    dataType: "json",
-    url: "/submit",
-    data: {
-      title: $("#title").val(),
-      note: $("#note").val(),
-      created: Date.now()
-    }
-  })
-  // If that API call succeeds, add the title and a delete button for the note to the page
-    .then(function(data) {
-    // Add the title and delete button to the #results section
-      $("#results").prepend("<p class='data-entry' data-id=" + data._id + "><span class='dataTitle' data-id=" +
-      data._id + ">" + data.title + "</span><span class=delete>X</span></p><img src="+data.i+"class=img img-responsive>");
-      // Clear the note and title inputs on the page
-      $("#note").val("");
-      $("#title").val("");
-    });
-});
+// $(document).on("click", "#make-new", function() {
+//   // AJAX POST call to the submit route on the server
+//   // This will take the data from the form and send it to the server
+//   $.ajax({
+//     type: "POST",
+//     dataType: "json",
+//     url: "/submit",
+//     data: {
+//       title: $("#title").val(),
+//       note: $("#note").val(),
+//       created: Date.now()
+//     }
+//   })
+//   // If that API call succeeds, add the title and a delete button for the note to the page
+//     .then(function(data) {
+//     // Add the title and delete button to the #results section
+//       $("#results").prepend("<p class='data-entry' data-id=" + data._id + "><span class='dataTitle' data-id=" +
+//       data._id + ">" + data.title + "</span><span class='comment-entry'>" + data.note + "<span class=delete>X</span></p>");
+//       // Clear the note and title inputs on the page
+//       $("#note").val("");
+//       $("#title").val("");
+//     });
+// });
 
 // When the #clear-all button is pressed
 $("#clear-all").on("click", function() {

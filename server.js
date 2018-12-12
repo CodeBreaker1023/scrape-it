@@ -69,15 +69,6 @@ app.get("/scrape", function(req, res) {
         var link = $(element).attr("href");
         console.log("Link: "+link);
       
-
-      // top 3 coindesk articles
-      // $(".feature").each(function(i, element) {
-      //   var t = $(element).attr("title");
-      //   var image = $(element).children("picture").children("img").attr("src");
-      //   console.log("Image sourcce: "+image);
-      //   var title = $(element).children().text();
-      //   var link = $(element).find("a").attr("href");
-      
       // coins and price chart
       // $(".sidebar-price-widget-v2-list-item__meta").each(function(i,element) {
       //   var coin = $(element).children().text();
@@ -101,6 +92,23 @@ app.get("/scrape", function(req, res) {
     });
     console.log("Finished scraping");
     res.send("Finished scraping")
+  });
+});
+
+// Handle form submission, save submission to mongo
+app.post("/submit", function(req, res) {
+  console.log(req.body);
+  // Insert the note into the notes collection
+  db.notes.insert(req.body, function(error, saved) {
+    // Log any errors
+    if (error) {
+      console.log(error);
+    }
+    else {
+      // Otherwise, send the note back to the browser
+      // This will fire off the success function of the ajax request
+      res.send(saved);
+    }
   });
 });
 
