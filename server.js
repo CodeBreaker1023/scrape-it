@@ -56,22 +56,51 @@ app.get("/all", function(req, res){
 
 app.get("/scrape", function(req, res) {
   // Query: In our database, go to the animals collection, then "find" everything
- axios.get("http://www.espn.com/").then(function(response){
+ axios.get("https://www.coindesk.com/category/technology-news/").then(function(response){
     var $ = cheerio.load(response.data); //parse with cheerio
 
-    // $(".headlineStack__list").each(function(i, element) {
-      $(".contentItem").each(function(i, element) {
-        console.log(i);
+      $(".stream-article").each(function(i, element) {
+        var title = $(element).attr("title");
+        console.log("Title: "+title);
+        var image = $(element).children("div").children("img").attr("src");
+        console.log("Image source: "+image);
+        // var t = $(element).children().text();
+        // var link = $(element).find("a").attr("href");
+        var link = $(element).attr("href");
+        console.log("Link: "+link);
+      
 
-      var title = $(element).children().text();
-      var link = $(element).find("a").attr("href");
-  
-      // Save these results in an object that we'll push into the results array we defined earlier
-      db.scrapedData.insert({articleTitle: title, articleLink: link})
-
+      // top 3 coindesk articles
+      // $(".feature").each(function(i, element) {
+      //   var t = $(element).attr("title");
+      //   var image = $(element).children("picture").children("img").attr("src");
+      //   console.log("Image sourcce: "+image);
+      //   var title = $(element).children().text();
+      //   var link = $(element).find("a").attr("href");
+      
+      // coins and price chart
+      // $(".sidebar-price-widget-v2-list-item__meta").each(function(i,element) {
+      //   var coin = $(element).children().text();
+      //   console.log("coin:" + coin);
+      //   var price = $(element).children(".sidebar-price-widget-v2-list-item__data").children("span").text();
+      //   console.log("price:" + price);
+      // })
+   
+      db.scrapedData.insert({
+        title: title,
+        image: image, 
+        link: link
+      }, function(err, found){
+        if (err) {
+          console.log(err);
+        }
+        else {
+          console.log(title); 
+        }
+      });
     });
-
-    $("#articles").append(".headlineStack__list");
+    console.log("Finished scraping");
+    res.send("Finished scraping")
   });
 });
 

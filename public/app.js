@@ -5,7 +5,7 @@
 // Loads results onto the page
 function getResults() {
   // Empty any results currently on the page
-  $("#results").empty();
+  $("#articles").empty();
   // Grab all of the current notes
   $.ajax({
     type: "GET",
@@ -15,13 +15,18 @@ function getResults() {
     
   }).then((data)=>{
     for (var i = 0; i < data.length; i++) {
+      console.log("data" + data);
 
-  console.log(data[i].articleTitle);
+  //console.log(data[i].title);
 
-      // ...populate #results with a p-tag that includes the note's articleTitle and object id
+      // ...populate #articles with a p-tag that includes the note's articleTitle and object id
       $("#articles").prepend("<p class='data-entry' data-id=" + data[i]._id + "><span class='dataTitle' data-id=" +
-        data[i]._id + ">" + data[i].articleTitle + "</span><span class=delete>X</span></p>");
-    }
+        data[i]._id + ">" + data[i].title + "</span><span class=delete>X</span><button class='comment'>Comment</button></p><img height='200' width='300' src="+data[i].image+" class='img img-responsive'><br/>");
+      
+      // ...populate coins and their prices
+      // $("#coin-prices").prepend("<p class='coin-prices' data-id=" + data[i]._id + "><span class='coins'>" + data[i]._coin +"</span><span class='prices'>" + data[i]._price +"</span><br/>")
+
+      }
   })
 
 
@@ -58,7 +63,7 @@ $(document).on("click", "#make-new", function() {
     .then(function(data) {
     // Add the title and delete button to the #results section
       $("#results").prepend("<p class='data-entry' data-id=" + data._id + "><span class='dataTitle' data-id=" +
-      data._id + ">" + data.title + "</span><span class=delete>X</span></p>");
+      data._id + ">" + data.title + "</span><span class=delete>X</span></p><img src="+data.i+"class=img img-responsive>");
       // Clear the note and title inputs on the page
       $("#note").val("");
       $("#title").val("");
