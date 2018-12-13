@@ -5,6 +5,8 @@ var mongojs = require("mongojs");
 var axios = require("axios");
 var cheerio = require("cheerio");
 
+var port = process.env.PORT || 3000;
+
 // Initialize Express
 var app = express();
 
@@ -117,6 +119,6 @@ app.post("/submit", function(req, res) {
 /* -/-/-/-/-/-/-/-/-/-/-/-/- */
 
 // Listen on port 3000
-app.listen(3000, function() {
+app.listen(port, function() {
   console.log("App running on port 3000!");
 });
