@@ -70,17 +70,19 @@ app.get("/scrape", function(req, res) {
         console.log("Link: "+link);
       
       // coins and price chart
-      // $(".sidebar-price-widget-v2-list-item__meta").each(function(i,element) {
-      //   var coin = $(element).children().text();
-      //   console.log("coin:" + coin);
-      //   var price = $(element).children(".sidebar-price-widget-v2-list-item__data").children("span").text();
-      //   console.log("price:" + price);
-      // })
+      $(".sidebar-price-widget-v2-list-item__meta").each(function(i,element) {
+        var coin = $(element).children().text();
+        console.log("coin:" + coin);
+        var price = $(element).children(".sidebar-price-widget-v2-list-item__data").children("span").text();
+        console.log("price:" + price);
+      })
    
       db.scrapedData.insert({
         title: title,
         image: image, 
-        link: link
+        link: link,
+        coin: coin,
+        price: price
       }, function(err, found){
         if (err) {
           console.log(err);
