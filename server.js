@@ -7,20 +7,32 @@ var cheerio = require("cheerio");
 
 var port = process.env.PORT || 3000;
 
+const mongoose = require('mongoose');
+// var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraper";
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/scraper", { useNewUrlParser: true });
+
+mongoose.connection.on('connected', () => {
+  console.log('Connect to Database ');
+})
+mongoose.connection.on('error', (err) => {
+  console.log(`error connecting to db ${err}`);
+})
+
+var db = mongoose.connection;
 // Initialize Express
 var app = express();
 
 app.use(express.static('public'));
 
-// Database configuration
-var databaseUrl = "scraper";
-var collections = ["scrapedData"];
+// // Database configuration
+// var databaseUrl = "scraper";
+// var collections = ["scrapedData"];
 
-// Hook mongojs configuration to the db variable
-var db = mongojs(databaseUrl, collections);
-db.on("error", function(error) {
-  console.log("Database Error:", error);
-});
+// // Hook mongojs configuration to the db variable
+// var db = mongojs(databaseUrl, collections);
+// db.on("error", function(error) {
+//   console.log("Database Error:", error);
+// });
 
 // Main route (simple Hello World Message)
 app.get("/", function(req, res) {
